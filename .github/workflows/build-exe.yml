@@ -25,12 +25,17 @@ jobs:
           pip install --use-pep517 -r requirements.txt || pip install pandas>=2.3.2 pyside6>=6.9.2
           pip install pyinstaller
 
-      - name: Build executable
+      - name: Build bundle
         run: |
-          pyinstaller --noconsole --onefile --name Chrono main.py
+          pyinstaller --noconsole --onedir --name Chrono main.py
+
+      - name: Zip dist folder
+        run: |
+          cd dist
+          powershell -Command "Compress-Archive -Path 'Chrono' -DestinationPath 'Chrono.zip' -Force"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: chrono-exe
-          path: dist/Chrono.exe
+          name: chrono-zip
+          path: dist/Chrono.zip
